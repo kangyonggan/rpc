@@ -24,7 +24,7 @@
     <rpc:register type="zookeeper" ip="122.112.204.190" port="2181"/>
 
     <!-- 引用服务 -->
-    <rpc:refrence id="mathService" name="com.kangyonggan.rpc.service.UserService"/>
+    <rpc:refrence id="userService" name="com.kangyonggan.rpc.service.UserService"/>
 </beans>
 ```
 先启动上一篇文章中的测试用例把UserService发布到注册中心，再启动本例，rpc框架会读取xml并解析，然后把User服务从注册中心获取到本地。
