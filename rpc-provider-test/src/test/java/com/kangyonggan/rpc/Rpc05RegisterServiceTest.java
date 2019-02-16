@@ -9,7 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author kangyonggan
  * @since 2019-02-13
  */
-public class Rpc04RegisterServiceTest {
+public class Rpc05RegisterServiceTest {
 
     private ClassPathXmlApplicationContext context;
 

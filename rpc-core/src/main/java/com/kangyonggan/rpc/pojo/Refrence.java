@@ -2,15 +2,18 @@ package com.kangyonggan.rpc.pojo;
 
 import com.kangyonggan.rpc.constants.RegisterType;
 import com.kangyonggan.rpc.constants.RpcPojo;
+import com.kangyonggan.rpc.handler.ServiceHandler;
 import com.kangyonggan.rpc.util.SpringUtils;
 import com.kangyonggan.rpc.util.ZookeeperClient;
 import lombok.Data;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,7 @@ import java.util.List;
  * @since 2019-02-15
  */
 @Data
-public class Refrence implements InitializingBean, ApplicationContextAware {
+public class Refrence implements InitializingBean, ApplicationContextAware, FactoryBean {
 
     private Logger logger = Logger.getLogger(Refrence.class);
 
@@ -89,6 +92,28 @@ public class Refrence implements InitializingBean, ApplicationContextAware {
         }
 
         logger.info("引用服务获取完成[" + path + "]:" + services);
+    }
+
+    @Override
+    public Object getObject() throws Exception {
+        Class<?> clazz = getObjectType();
+        // 动态代理，获取远程服务实例
+        return Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, new ServiceHandler(this));
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        try {
+            return Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            logger.error("没有对应的服务", e);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isSingleton() {
+        return true;
     }
 
     @Override

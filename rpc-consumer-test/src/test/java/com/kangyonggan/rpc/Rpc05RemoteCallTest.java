@@ -1,5 +1,7 @@
 package com.kangyonggan.rpc;
 
+import com.kangyonggan.rpc.service.UserService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -8,7 +10,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author kangyonggan
  * @since 2019/2/16 0016
  */
-public class Rpc04SubscribeServiceTest {
+public class Rpc05RemoteCallTest {
 
     private ClassPathXmlApplicationContext context;
 
@@ -18,13 +20,15 @@ public class Rpc04SubscribeServiceTest {
     }
 
     /**
-     * 订阅服务
+     * 远程调用
      *
      * @throws Exception
      */
     @Test
-    public void testSubscribe() throws Exception {
-        System.in.read();
+    public void testRemoveCall() throws Exception {
+        UserService userService = (UserService) context.getBean("userService");
+        boolean exists = userService.existsMobileNo("18516690317");
+        Assert.assertTrue(exists);
     }
 
 }
