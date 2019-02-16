@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns="https://www.kangyonggan.com/schema/rpc"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="https://www.kangyonggan.com/schema/rpc">
+    <!-- 应用 -->
+    <xsd:element name="application">
+        <xsd:complexType>
+            <!--应用ID-->
+            <xsd:attribute name="id" type="xsd:string" fixed="application"/>
+            <!--应用名称-->
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rpc="https://www.kangyonggan.com/schema/rpc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       https://www.kangyonggan.com/schema/rpc https://www.kangyonggan.com/schema/rpc/rpc.xsd">
+
+    <!-- 应用 -->
+    <rpc:application name="RPC_PROVIDER"/>
+
+</beans>
