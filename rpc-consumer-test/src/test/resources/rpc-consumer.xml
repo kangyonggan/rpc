@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rpc="https://www.kangyonggan.com/schema/rpc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       https://www.kangyonggan.com/schema/rpc https://www.kangyonggan.com/schema/rpc/rpc.xsd">
+
+    <!-- 应用 -->
+    <rpc:application name="RPC_CONSUMER"/>
+
+    <!-- 客户端 -->
+    <rpc:client/>
+
+    <!-- 注册中心 -->
+    <rpc:register type="zookeeper" ip="122.112.204.190" port="2181"/>
+
+    <!-- 引用服务 -->
+    <rpc:refrence id="mathService" name="com.kangyonggan.rpc.service.UserService"/>
+</beans>

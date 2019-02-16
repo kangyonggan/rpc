@@ -14,7 +14,8 @@
 
     <modules>
         <module>rpc-core</module>
-        <module>rpc-test</module>
+        <module>rpc-consumer-test</module>
+        <module>rpc-provider-test</module>
     </modules>
 
     <properties>
@@ -69,7 +70,12 @@
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rpc-test</artifactId>
+                <artifactId>rpc-provider-test</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>rpc-consumer-test</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

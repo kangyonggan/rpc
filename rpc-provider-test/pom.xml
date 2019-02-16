@@ -9,10 +9,10 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rpc-test</artifactId>
+    <artifactId>rpc-provider-test</artifactId>
 
-    <name>RPC CORE</name>
-    <description>RPC测试</description>
+    <name>RPC Provider Test</name>
+    <description>RPC服务提供者测试</description>
 
     <build>
         <plugins>
@@ -43,4 +43,5 @@
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
+
 </project>

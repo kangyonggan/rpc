@@ -35,7 +35,7 @@ git clone https://github.com/kangyonggan/rpc.git
 ### 第二步
 切换分支
 ```
-git 03-register-service
+git checkout 03-register-service
 ```
 
 ### 第三步

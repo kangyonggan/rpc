@@ -1,8 +1,6 @@
 package com.kangyonggan.rpc.constants;
 
 /**
- * pojo名称枚举
- *
  * @author kangyonggan
  * @since 2019-02-14
  */
@@ -26,5 +24,16 @@ public enum RpcPojo {
     /**
      * 提供服务
      */
-    service
+    service,
+
+    /**
+     * 客户端
+     */
+    client,
+
+    /**
+     * 引用
+     */
+    refrence
+
 }

@@ -49,4 +49,22 @@
             <xsd:attribute name="ref" type="xsd:string"/>
         </xsd:complexType>
     </xsd:element>
+
+    <!-- 客户端 -->
+    <xsd:element name="client">
+        <xsd:complexType>
+            <!-- 客户端ID -->
+            <xsd:attribute name="id" type="xsd:string" fixed="client"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- 引用 -->
+    <xsd:element name="refrence">
+        <xsd:complexType>
+            <!-- ID -->
+            <xsd:attribute name="id" type="xsd:string" use="required"/>
+            <!-- 服务接口名称 -->
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>
