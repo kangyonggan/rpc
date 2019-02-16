@@ -4,7 +4,7 @@
 
 有了注册中心，我们就可以开发一个服务提供者，然后在xml中配置注册中心的地址，才能把服务发布到注册中心。这其中有3点需要我们开发：
 1. 自定义xml标签
-2. 启动一个服务
+2. 启动服务端
 3. 发布服务
 
 本篇实现第1点！
@@ -100,12 +100,18 @@ git clone https://github.com/kangyonggan/rpc.git
 ```
 
 ### 第二步
+切换分支
+```
+git checkout 02-start-server
+```
+
+### 第三步
 编译源码
 ```
 mvn clean install
 ```
 
-### 第三步
+### 第四步
 查看测试报告，在`rpc-test/target/surefire-reports/com.kangyonggan.rpc.Rpc01XsdTest.txt`， 内容为:
 ```
 -------------------------------------------------------------------------------
