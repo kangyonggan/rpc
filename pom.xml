@@ -27,6 +27,8 @@
         <log4j.version>1.2.17</log4j.version>
         <lombok.version>1.16.8</lombok.version>
         <netty.version>4.1.33.Final</netty.version>
+        <zookeeper.version>3.4.13</zookeeper.version>
+        <zkclient.version>0.1</zkclient.version>
     </properties>
 
     <build>
@@ -93,6 +95,20 @@
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
                 <version>${netty.version}</version>
+            </dependency>
+
+            <!--zookeeper-->
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
+            </dependency>
+
+            <!--zkClient-->
+            <dependency>
+                <groupId>com.github.sgroschupf</groupId>
+                <artifactId>zkclient</artifactId>
+                <version>${zkclient.version}</version>
             </dependency>
 
             <!-- log4j -->

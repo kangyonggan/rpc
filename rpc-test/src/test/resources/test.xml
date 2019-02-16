@@ -11,4 +11,11 @@
 
     <!--服务-->
     <rpc:server port="9203" />
+
+    <!-- 注册中心 -->
+    <rpc:register type="zookeeper" ip="122.112.204.190" port="2181" />
+
+    <!-- User服务 -->
+    <rpc:service id="userService" name="com.kangyonggan.rpc.service.UserService" ref="userServiceImpl" />
+    <bean id="userServiceImpl" class="com.kangyonggan.rpc.service.impl.UserServiceImpl" />
 </beans>

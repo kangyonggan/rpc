@@ -9,7 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author kangyonggan
  * @since 2019-02-13
  */
-public class Rpc02StartrServerTest {
+public class Rpc03RegisterServiceTest {
 
     private ClassPathXmlApplicationContext context;
 
@@ -19,12 +19,12 @@ public class Rpc02StartrServerTest {
     }
 
     /**
-     * 启动服务端
+     * 发布服务
      *
      * @throws Exception
      */
     @Test
-    public void testStartServer() throws Exception {
+    public void testPublish() throws Exception {
         System.in.read();
     }
 

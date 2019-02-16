@@ -14,7 +14,17 @@ public enum RpcPojo {
     application,
 
     /**
-     * 服务
+     * 注册中心
      */
-    server
+    register,
+
+    /**
+     * 服务端
+     */
+    server,
+
+    /**
+     * 提供服务
+     */
+    service
 }

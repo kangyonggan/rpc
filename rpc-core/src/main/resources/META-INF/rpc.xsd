@@ -21,4 +21,32 @@
             <xsd:attribute name="port" type="xsd:string" use="required"/>
         </xsd:complexType>
     </xsd:element>
+
+    <!-- 注册中心 -->
+    <xsd:element name="register">
+        <xsd:complexType>
+            <!-- ID -->
+            <xsd:attribute name="id" type="xsd:string" fixed="register"/>
+            <!-- 类型 -->
+            <xsd:attribute name="type" type="xsd:string" use="required"/>
+            <!-- ip -->
+            <xsd:attribute name="ip" type="xsd:string"/>
+            <!-- 端口 -->
+            <xsd:attribute name="port" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!-- 服务 -->
+    <xsd:element name="service">
+        <xsd:complexType>
+            <!-- ID -->
+            <xsd:attribute name="id" type="xsd:string" use="required"/>
+            <!-- 服务接口名称 -->
+            <xsd:attribute name="name" type="xsd:string" use="required"/>
+            <!-- 服务实现类 -->
+            <xsd:attribute name="impl" type="xsd:string"/>
+            <!-- 服务实现相关类 -->
+            <xsd:attribute name="ref" type="xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>
