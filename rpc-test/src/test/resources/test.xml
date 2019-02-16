@@ -9,4 +9,6 @@
     <!-- 应用 -->
     <rpc:application name="RPC_PROVIDER"/>
 
+    <!--服务-->
+    <rpc:server port="9203" />
 </beans>

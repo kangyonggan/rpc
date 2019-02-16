@@ -21,10 +21,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <compiler.level>1.8</compiler.level>
         <plugin.compiler.version>3.2</plugin.compiler.version>
+        <plugin.surefire.version>2.18.1</plugin.surefire.version>
         <spring.version>4.2.6.RELEASE</spring.version>
         <junit.version>4.11</junit.version>
         <log4j.version>1.2.17</log4j.version>
         <lombok.version>1.16.8</lombok.version>
+        <netty.version>4.1.33.Final</netty.version>
     </properties>
 
     <build>
@@ -39,6 +41,16 @@
                         <source>${compiler.level}</source>
                         <target>${compiler.level}</target>
                         <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <!--ignore test -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${plugin.surefire.version}</version>
+                    <configuration>
+                        <skip>true</skip>
                     </configuration>
                 </plugin>
             </plugins>
@@ -74,6 +86,13 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>${spring.version}</version>
+            </dependency>
+
+            <!--netty-->
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
             </dependency>
 
             <!-- log4j -->

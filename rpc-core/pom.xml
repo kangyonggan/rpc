@@ -39,6 +39,12 @@
             <artifactId>spring-context</artifactId>
         </dependency>
 
+        <!--netty-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+        </dependency>
+
         <!-- log4j -->
         <dependency>
             <groupId>log4j</groupId>

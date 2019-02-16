@@ -11,5 +11,10 @@ public enum RpcPojo {
     /**
      * 应用
      */
-    application
+    application,
+
+    /**
+     * 服务
+     */
+    server
 }

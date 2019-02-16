@@ -1,8 +1,5 @@
 package com.kangyonggan.rpc;
 
-import com.kangyonggan.rpc.constants.RpcPojo;
-import com.kangyonggan.rpc.pojo.Application;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -12,7 +9,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author kangyonggan
  * @since 2019-02-13
  */
-public class Rpc01XsdTest {
+public class Rpc02StartrServerTest {
 
     private ClassPathXmlApplicationContext context;
 
@@ -22,12 +19,13 @@ public class Rpc01XsdTest {
     }
 
     /**
-     * 解析自定义的xml标签
+     * 启动服务端
+     *
+     * @throws Exception
      */
     @Test
-    public void testParse() {
-        Application application = (Application) context.getBean(RpcPojo.application.name());
-        Assert.assertEquals(application.getName(), "RPC_PROVIDER");
+    public void testStartServer() throws Exception {
+        System.in.read();
     }
 
 }

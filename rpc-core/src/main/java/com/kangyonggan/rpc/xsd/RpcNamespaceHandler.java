@@ -2,6 +2,7 @@ package com.kangyonggan.rpc.xsd;
 
 import com.kangyonggan.rpc.constants.RpcPojo;
 import com.kangyonggan.rpc.pojo.Application;
+import com.kangyonggan.rpc.pojo.Server;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
@@ -15,5 +16,6 @@ public class RpcNamespaceHandler extends NamespaceHandlerSupport {
     @Override
     public void init() {
         registerBeanDefinitionParser(RpcPojo.application.name(), new SimpleBeanDefinitionParser(Application.class));
+        registerBeanDefinitionParser(RpcPojo.server.name(), new SimpleBeanDefinitionParser(Server.class));
     }
 }
