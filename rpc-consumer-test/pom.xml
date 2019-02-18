@@ -36,10 +36,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>rpc-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>rpc-provider-test</artifactId>
-        </dependency>
 
         <!-- junit -->
         <dependency>

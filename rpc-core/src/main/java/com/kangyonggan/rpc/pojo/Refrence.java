@@ -100,7 +100,7 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
      *
      * @throws Exception
      */
-    private void getRefrences() throws Exception {
+    public void getRefrences() throws Exception {
         String path = "/rpc/" + name + "/provider";
         logger.info("正在获取引用服务:[" + path + "]");
         Register register = (Register) SpringUtils.getApplicationContext().getBean(RpcPojo.register.name());
@@ -117,7 +117,6 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
                     continue;
                 }
                 services.add(service);
-
             }
         }
 

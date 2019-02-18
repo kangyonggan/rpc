@@ -36,6 +36,10 @@ public class ServiceHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        return invoke(method.getName(), method.getParameterTypes(), args, method.getReturnType());
+    }
+
+    public Object invoke(String methodName, Class[] argTypes, Object[] args, Class<?> returnType) throws Throwable {
         // 准备请求参数
         RpcRequest request = new RpcRequest();
 
@@ -47,8 +51,8 @@ public class ServiceHandler implements InvocationHandler {
 
         // 必要参数
         request.setClassName(refrence.getName());
-        request.setMethodName(method.getName());
-        request.setTypes(getTypes(method));
+        request.setMethodName(methodName);
+        request.setTypes(getTypes(argTypes));
         request.setArgs(args);
 
         // 判断是否异步调用
@@ -58,7 +62,7 @@ public class ServiceHandler implements InvocationHandler {
                 @Override
                 public Object call() throws Exception {
                     try {
-                        return remoteCall(refrence, request, method);
+                        return remoteCall(refrence, request, returnType);
                     } catch (Throwable e) {
                         logger.error("异步调用发生异常", e);
                         throw new RuntimeException(e);
@@ -70,8 +74,8 @@ public class ServiceHandler implements InvocationHandler {
             RpcContext.getFutureTask().set(futureTask);
 
             // 判断基础类型，返回默认值，否则自动转换会报空指针
-            if (TypeParseUtil.isBasicType(method.getReturnType())) {
-                result = TypeParseUtil.getBasicTypeDefaultValue(method.getReturnType());
+            if (TypeParseUtil.isBasicType(returnType)) {
+                result = TypeParseUtil.getBasicTypeDefaultValue(returnType);
             }
 
             logger.info("异步调用直接返回:" + result);
@@ -79,7 +83,7 @@ public class ServiceHandler implements InvocationHandler {
         }
 
         // 同步调用
-        return remoteCall(refrence, request, method);
+        return remoteCall(refrence, request, returnType);
     }
 
     /**
@@ -87,11 +91,11 @@ public class ServiceHandler implements InvocationHandler {
      *
      * @param refrence
      * @param request
-     * @param method
+     * @param returnType
      * @return
      * @throws Throwable
      */
-    private Object remoteCall(Refrence refrence, RpcRequest request, Method method) throws Throwable {
+    private Object remoteCall(Refrence refrence, RpcRequest request, Class<?> returnType) throws Throwable {
         try {
             return new RpcClient(refrence).remoteCall(request);
         } catch (Throwable e) {
@@ -109,8 +113,8 @@ public class ServiceHandler implements InvocationHandler {
                 logger.info("远程调用失败，使用失败安全策略");
 
                 // 判断基础类型，返回默认值，否则自动转换会报空指针
-                if (TypeParseUtil.isBasicType(method.getReturnType())) {
-                    return TypeParseUtil.getBasicTypeDefaultValue(method.getReturnType());
+                if (TypeParseUtil.isBasicType(returnType)) {
+                    return TypeParseUtil.getBasicTypeDefaultValue(returnType);
                 }
                 return null;
             }
@@ -130,6 +134,20 @@ public class ServiceHandler implements InvocationHandler {
         String[] types = new String[method.getParameterTypes().length];
         for (int i = 0; i < method.getParameterTypes().length; i++) {
             types[i] = method.getParameterTypes()[i].getName();
+        }
+        return types;
+    }
+
+    /**
+     * 获取方法的参数类型
+     *
+     * @param methodTypes
+     * @return
+     */
+    private String[] getTypes(Class<?>[] methodTypes) {
+        String[] types = new String[methodTypes.length];
+        for (int i = 0; i < methodTypes.length; i++) {
+            types[i] = methodTypes[i].getName();
         }
         return types;
     }
