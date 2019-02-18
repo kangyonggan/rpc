@@ -12,6 +12,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
     private String id;
 
     private String name;
+
+    private String directServerIp;
+
+    private int directServerPort;
 
     private List<Service> services;
 
@@ -62,6 +67,13 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
             logger.info("没有配置client，无法获取引用");
             return;
         }
+
+        // 如果是点对点服务，不需要配置注册中心
+        if (!StringUtils.isEmpty(directServerIp)) {
+            logger.info("点对点服务，" + directServerIp + ":" + directServerPort);
+            return;
+        }
+
         if (!applicationContext.containsBean(RpcPojo.register.name())) {
             logger.info("没有配置register，无法获取引用");
             return;
@@ -121,6 +133,8 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
         return "Refrence{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
+                ", directServerIp='" + directServerIp + '\'' +
+                ", directServerPort=" + directServerPort +
                 ", services=" + services +
                 '}';
     }

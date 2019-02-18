@@ -84,6 +84,10 @@
             <xsd:attribute name="id" type="xsd:string" use="required"/>
             <!-- 服务接口名称 -->
             <xsd:attribute name="name" type="xsd:string" use="required"/>
+            <!-- 定向服务IP -->
+            <xsd:attribute name="direct_server_ip" type="xsd:string" />
+            <!-- 定向服务端口 -->
+            <xsd:attribute name="direct_server_port" type="xsd:string" />
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>

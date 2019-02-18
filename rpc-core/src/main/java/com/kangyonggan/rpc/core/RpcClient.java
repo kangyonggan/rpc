@@ -17,6 +17,7 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -71,14 +72,19 @@ public class RpcClient {
         });
 
         try {
-            // 获取负载均衡策略
-            Client client = (Client) SpringUtils.getApplicationContext().getBean(RpcPojo.client.name());
-            logger.info("客户端负载均衡策略:" + client.getLoadBalance());
+            // 如果是点对点服务，不走负载均衡
+            if (!StringUtils.isEmpty(refrence.getDirectServerIp())) {
+                channelFuture = bootstrap.connect(refrence.getDirectServerIp(), refrence.getDirectServerPort()).sync();
+                logger.info("点对点服务连接成功");
+            } else {
+                // 获取负载均衡策略
+                Client client = (Client) SpringUtils.getApplicationContext().getBean(RpcPojo.client.name());
+                logger.info("客户端负载均衡策略:" + client.getLoadBalance());
 
-            Service service = LoadBalance.getService(refrence.getServices(), client.getLoadBalance());
-            channelFuture = bootstrap.connect(service.getIp(), service.getPort()).sync();
-
-            logger.info("连接远程服务端成功:" + service);
+                Service service = LoadBalance.getService(refrence.getServices(), client.getLoadBalance());
+                channelFuture = bootstrap.connect(service.getIp(), service.getPort()).sync();
+                logger.info("连接远程服务端成功:" + service);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
