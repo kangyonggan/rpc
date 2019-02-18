@@ -29,6 +29,9 @@ public class ConsumerTest {
         UserService userService = (UserService) context.getBean("userService");
         boolean exists = userService.existsMobileNo("18516690317");
         Assert.assertTrue(exists);
+        // 本次走缓存
+        exists = userService.existsMobileNo("18516690317");
+        Assert.assertTrue(exists);
     }
 
 }
