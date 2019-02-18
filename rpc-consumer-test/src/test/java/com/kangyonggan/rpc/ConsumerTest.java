@@ -1,5 +1,6 @@
 package com.kangyonggan.rpc;
 
+import com.kangyonggan.rpc.core.RpcContext;
 import com.kangyonggan.rpc.service.UserService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,9 +29,9 @@ public class ConsumerTest {
     public void testRemoveCall() throws Exception {
         UserService userService = (UserService) context.getBean("userService");
         boolean exists = userService.existsMobileNo("18516690317");
-        Assert.assertTrue(exists);
-        // 本次走缓存
-        exists = userService.existsMobileNo("18516690317");
+        Assert.assertFalse(exists);
+        exists = (boolean) RpcContext.getFutureTask().get().get();
+        RpcContext.getFutureTask().remove();
         Assert.assertTrue(exists);
     }
 

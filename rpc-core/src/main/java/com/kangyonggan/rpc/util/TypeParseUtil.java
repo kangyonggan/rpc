@@ -11,6 +11,8 @@ import java.util.Map;
  */
 public final class TypeParseUtil {
 
+    private static char DEFAULT_CHAR;
+
     private TypeParseUtil() {
     }
 
@@ -76,11 +78,23 @@ public final class TypeParseUtil {
     }
 
     /**
+     * 判断是否基础类型
+     *
+     * @param type
+     * @return
+     */
+    public static boolean isBasicType(Class<?> type) {
+        return byte.class.equals(type) || short.class.equals(type) || int.class.equals(type) ||
+                long.class.equals(type) || float.class.equals(type) || double.class.equals(type) ||
+                boolean.class.equals(type) || char.class.equals(type);
+    }
+
+    /**
      * 返回基础类型默认值
      *
      * @return
      */
-    private static Object getBasicTypeDefaultValue(Class<?> type) {
+    public static Object getBasicTypeDefaultValue(Class<?> type) {
         if (byte.class.equals(type)) {
             return 0;
         } else if (short.class.equals(type)) {
@@ -94,9 +108,9 @@ public final class TypeParseUtil {
         } else if (double.class.equals(type)) {
             return 0;
         } else if (boolean.class.equals(type)) {
-            return 0;
+            return false;
         } else if (char.class.equals(type)) {
-            return 0;
+            return DEFAULT_CHAR;
         }
         return null;
     }
