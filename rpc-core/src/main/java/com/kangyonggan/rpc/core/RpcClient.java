@@ -2,7 +2,11 @@ package com.kangyonggan.rpc.core;
 
 import com.kangyonggan.rpc.constants.RpcPojo;
 import com.kangyonggan.rpc.handler.RpcClientHandler;
-import com.kangyonggan.rpc.pojo.*;
+import com.kangyonggan.rpc.handler.RpcReadTimeoutHandler;
+import com.kangyonggan.rpc.pojo.Application;
+import com.kangyonggan.rpc.pojo.Client;
+import com.kangyonggan.rpc.pojo.Refrence;
+import com.kangyonggan.rpc.pojo.Service;
 import com.kangyonggan.rpc.util.LoadBalance;
 import com.kangyonggan.rpc.util.SpringUtils;
 import io.netty.bootstrap.Bootstrap;
@@ -16,12 +20,14 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 客户端
@@ -67,6 +73,10 @@ public class RpcClient {
 
                 // 收发消息
                 handler = new RpcClientHandler();
+
+                // 超时
+                ch.pipeline().addLast(new RpcReadTimeoutHandler(handler, refrence.getTimeout(), TimeUnit.MILLISECONDS));
+
                 ch.pipeline().addLast(handler);
             }
         });

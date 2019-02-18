@@ -41,6 +41,8 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
 
     private String version;
 
+    private long timeout;
+
     private List<Service> services;
 
     /**
@@ -144,6 +146,7 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
                 ", directServerIp='" + directServerIp + '\'' +
                 ", directServerPort=" + directServerPort +
                 ", version=" + version +
+                ", timeout=" + timeout +
                 ", services=" + services +
                 '}';
     }

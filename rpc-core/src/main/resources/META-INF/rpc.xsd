@@ -88,6 +88,8 @@
             <xsd:attribute name="name" type="xsd:string" use="required"/>
             <!-- 版本 -->
             <xsd:attribute name="version" type="xsd:string"/>
+            <!-- 超时毫秒数 -->
+            <xsd:attribute name="timeout" type="xsd:integer" default="10000"/>
             <!-- 定向服务IP -->
             <xsd:attribute name="direct_server_ip" type="xsd:string"/>
             <!-- 定向服务端口 -->
