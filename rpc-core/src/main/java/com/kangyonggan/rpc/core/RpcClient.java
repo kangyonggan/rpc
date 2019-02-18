@@ -2,9 +2,8 @@ package com.kangyonggan.rpc.core;
 
 import com.kangyonggan.rpc.constants.RpcPojo;
 import com.kangyonggan.rpc.handler.RpcClientHandler;
-import com.kangyonggan.rpc.pojo.Application;
-import com.kangyonggan.rpc.pojo.Refrence;
-import com.kangyonggan.rpc.pojo.Service;
+import com.kangyonggan.rpc.pojo.*;
+import com.kangyonggan.rpc.util.LoadBalance;
 import com.kangyonggan.rpc.util.SpringUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -72,7 +71,11 @@ public class RpcClient {
         });
 
         try {
-            Service service = refrence.getServices().get(0);
+            // 获取负载均衡策略
+            Client client = (Client) SpringUtils.getApplicationContext().getBean(RpcPojo.client.name());
+            logger.info("客户端负载均衡策略:" + client.getLoadBalance());
+
+            Service service = LoadBalance.getService(refrence.getServices(), client.getLoadBalance());
             channelFuture = bootstrap.connect(service.getIp(), service.getPort()).sync();
 
             logger.info("连接远程服务端成功:" + service);

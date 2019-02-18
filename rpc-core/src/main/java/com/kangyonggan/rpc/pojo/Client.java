@@ -13,4 +13,9 @@ public class Client {
 
     private String id;
 
+    /**
+     * 负载均衡
+     */
+    private String loadBalance;
+
 }

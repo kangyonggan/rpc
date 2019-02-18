@@ -55,6 +55,25 @@
         <xsd:complexType>
             <!-- 客户端ID -->
             <xsd:attribute name="id" type="xsd:string" fixed="client"/>
+            <!-- 负载均衡 -->
+            <xsd:attribute name="load_balance" default="poll">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <!--轮询（缺省）-->
+                        <xsd:enumeration value="poll"/>
+                        <!--随机-->
+                        <xsd:enumeration value="random"/>
+                        <!--加权轮询-->
+                        <xsd:enumeration value="weight_poll"/>
+                        <!--加权随机-->
+                        <xsd:enumeration value="weight_random"/>
+                        <!--源地址哈希-->
+                        <xsd:enumeration value="source_hash"/>
+                        <!--最小连接数-->
+                        <xsd:enumeration value="small_connect"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:attribute>
         </xsd:complexType>
     </xsd:element>
 
