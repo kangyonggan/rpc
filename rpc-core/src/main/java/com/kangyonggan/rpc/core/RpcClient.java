@@ -7,6 +7,7 @@ import com.kangyonggan.rpc.pojo.Application;
 import com.kangyonggan.rpc.pojo.Client;
 import com.kangyonggan.rpc.pojo.Refrence;
 import com.kangyonggan.rpc.pojo.Service;
+import com.kangyonggan.rpc.util.CacheUtil;
 import com.kangyonggan.rpc.util.LoadBalance;
 import com.kangyonggan.rpc.util.SpringUtils;
 import io.netty.bootstrap.Bootstrap;
@@ -20,13 +21,11 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -113,7 +112,7 @@ public class RpcClient {
         RpcRequest request = new RpcRequest();
 
         // 通用参数
-        request.setUuid(UUID.randomUUID().toString());
+        request.setUuid(RpcContext.getUuid().get());
         Application application = (Application) SpringUtils.getApplicationContext().getBean(RpcPojo.application.name());
         request.setClientApplicationName(application.getName());
         request.setClientIp(InetAddress.getLocalHost().getHostAddress());
@@ -124,6 +123,15 @@ public class RpcClient {
         request.setTypes(getTypes(method));
         request.setArgs(args);
 
+        // 判断是否使用缓存
+        if (refrence.isUseCache()) {
+            CacheUtil.CacheObject cacheObject = CacheUtil.getCache(request);
+            if (cacheObject != null) {
+                logger.info("结果走缓存：" + cacheObject.getRpcResponse());
+                return cacheObject.getRpcResponse().getResult();
+            }
+        }
+
         // 发送请求
         channelFuture.channel().writeAndFlush(request).sync();
         channelFuture.channel().closeFuture().sync();
@@ -133,6 +141,12 @@ public class RpcClient {
         logger.info("服务端响应：" + response);
 
         if (response.getIsSuccess()) {
+            // 判断是否缓存结果
+            if (refrence.isUseCache()) {
+                CacheUtil.setCache(request, response, refrence.getCacheTime());
+                logger.info("结果已缓存");
+            }
+
             return response.getResult();
         }
 

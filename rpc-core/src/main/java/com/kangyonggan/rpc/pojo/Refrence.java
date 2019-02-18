@@ -43,6 +43,10 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
 
     private long timeout;
 
+    private boolean useCache;
+
+    private long cacheTime;
+
     private List<Service> services;
 
     /**
@@ -147,6 +151,8 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
                 ", directServerPort=" + directServerPort +
                 ", version=" + version +
                 ", timeout=" + timeout +
+                ", useCache=" + useCache +
+                ", cacheTime=" + cacheTime +
                 ", services=" + services +
                 '}';
     }
