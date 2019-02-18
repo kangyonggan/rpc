@@ -37,6 +37,8 @@ public class Service implements InitializingBean, ApplicationContextAware, Seria
 
     private int port;
 
+    private String version;
+
     /**
      * 在spring实例化全部的bean之后执行
      *
@@ -110,6 +112,7 @@ public class Service implements InitializingBean, ApplicationContextAware, Seria
                 ", ref='" + ref + '\'' +
                 ", ip='" + ip + '\'' +
                 ", port=" + port +
+                ", version=" + version +
                 '}';
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author kangyonggan
  * @since 2019/2/16 0016
  */
-public class Rpc05RemoteCallTest {
+public class ConsumerTest {
 
     private ClassPathXmlApplicationContext context;
 

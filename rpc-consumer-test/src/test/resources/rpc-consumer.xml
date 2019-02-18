@@ -13,9 +13,8 @@
     <rpc:client/>
 
     <!-- 注册中心 -->
-    <!--<rpc:register type="zookeeper" ip="122.112.204.190" port="2181"/>-->
+    <rpc:register type="zookeeper" ip="122.112.204.190" port="2181"/>
 
     <!-- 引用服务 -->
-    <rpc:refrence id="userService" name="com.kangyonggan.rpc.service.UserService"
-                  direct_server_ip="127.0.0.1" direct_server_port="9203"/>
+    <rpc:refrence id="userService" name="com.kangyonggan.rpc.service.UserService" version="1.0.0"/>
 </beans>

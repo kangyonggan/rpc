@@ -39,6 +39,8 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
 
     private int directServerPort;
 
+    private String version;
+
     private List<Service> services;
 
     /**
@@ -99,7 +101,13 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
             List<String> nodes = zookeeperClient.getChildNodes(path);
 
             for (String node : nodes) {
-                services.add((Service) zookeeperClient.getNode(path + "/" + node));
+                Service service = (Service) zookeeperClient.getNode(path + "/" + node);
+                // 版本为空，则可以匹配任意版本，都在必须匹配一致的版本
+                if (!StringUtils.isEmpty(version) && !version.equals(service.getVersion())) {
+                    continue;
+                }
+                services.add(service);
+
             }
         }
 
@@ -135,6 +143,7 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
                 ", name='" + name + '\'' +
                 ", directServerIp='" + directServerIp + '\'' +
                 ", directServerPort=" + directServerPort +
+                ", version=" + version +
                 ", services=" + services +
                 '}';
     }
