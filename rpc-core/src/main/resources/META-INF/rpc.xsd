@@ -114,6 +114,23 @@
                     </xsd:restriction>
                 </xsd:simpleType>
             </xsd:attribute>
+            <!-- 容错策略 -->
+            <xsd:attribute name="fault" default="fail_fast">
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <!--快速失败（缺省）-->
+                        <xsd:enumeration value="fail_fast"/>
+                        <!--失败重试-->
+                        <xsd:enumeration value="fail_retry"/>
+                        <!--失败安全-->
+                        <xsd:enumeration value="fail_safe"/>
+                        <!--广播失败-->
+                        <xsd:enumeration value="broadcast_fail"/>
+                        <!--广播安全-->
+                        <xsd:enumeration value="broadcast_safe"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:attribute>
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>

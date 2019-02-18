@@ -49,6 +49,8 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
 
     private boolean async;
 
+    private String fault;
+
     private List<Service> services;
 
     /**
@@ -156,6 +158,7 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
                 ", useCache=" + useCache +
                 ", cacheTime=" + cacheTime +
                 ", async=" + async +
+                ", fault=" + fault +
                 ", services=" + services +
                 '}';
     }

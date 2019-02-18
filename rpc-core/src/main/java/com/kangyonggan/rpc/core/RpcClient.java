@@ -3,11 +3,12 @@ package com.kangyonggan.rpc.core;
 import com.kangyonggan.rpc.constants.RpcPojo;
 import com.kangyonggan.rpc.handler.RpcClientHandler;
 import com.kangyonggan.rpc.handler.RpcReadTimeoutHandler;
-import com.kangyonggan.rpc.pojo.Application;
 import com.kangyonggan.rpc.pojo.Client;
 import com.kangyonggan.rpc.pojo.Refrence;
 import com.kangyonggan.rpc.pojo.Service;
-import com.kangyonggan.rpc.util.*;
+import com.kangyonggan.rpc.util.CacheUtil;
+import com.kangyonggan.rpc.util.LoadBalance;
+import com.kangyonggan.rpc.util.SpringUtils;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -22,10 +23,6 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
-import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -100,66 +97,13 @@ public class RpcClient {
     }
 
     /**
-     * 发送消息
-     *
-     * @param method
-     * @param args
-     * @return
-     * @throws Throwable
-     */
-    public Object send(Method method, Object[] args) throws Throwable {
-        // 准备请求参数
-        RpcRequest request = new RpcRequest();
-
-        // 通用参数
-        request.setUuid(RpcContext.getUuid().get());
-        Application application = (Application) SpringUtils.getApplicationContext().getBean(RpcPojo.application.name());
-        request.setClientApplicationName(application.getName());
-        request.setClientIp(InetAddress.getLocalHost().getHostAddress());
-
-        // 必要参数
-        request.setClassName(refrence.getName());
-        request.setMethodName(method.getName());
-        request.setTypes(getTypes(method));
-        request.setArgs(args);
-
-        // 判断是否异步调用
-        if (refrence.isAsync()) {
-            Object result = null;
-            FutureTask<Object> futureTask = AsynUtils.submitTask(new Callable<Object>() {
-                @Override
-                public Object call() throws Exception {
-                    try {
-                        return remoteCall(request);
-                    } catch (Throwable e) {
-                        logger.error("异步调用发生异常", e);
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-
-            // 异步放入上下文中，提交调用方法后，可以从上下文中获取结果
-            RpcContext.getFutureTask().set(futureTask);
-
-            // 判断基础类型，返回默认值，否则自动转换会报空指针
-            if(TypeParseUtil.isBasicType(method.getReturnType())) {
-                result = TypeParseUtil.getBasicTypeDefaultValue(method.getReturnType());
-            }
-
-            logger.info("异步调用直接返回:" + result);
-            return result;
-        }
-        return remoteCall(request);
-    }
-
-    /**
      * 远程调用
      *
      * @param request
      * @return
      * @throws Throwable
      */
-    private Object remoteCall(RpcRequest request) throws Throwable {
+    public Object remoteCall(RpcRequest request) throws Throwable {
         // 判断是否使用缓存
         if (refrence.isUseCache()) {
             CacheUtil.CacheObject cacheObject = CacheUtil.getCache(request);
@@ -188,19 +132,5 @@ public class RpcClient {
         }
 
         throw response.getThrowable();
-    }
-
-    /**
-     * 获取方法的参数类型
-     *
-     * @param method
-     * @return
-     */
-    private String[] getTypes(Method method) {
-        String[] types = new String[method.getParameterTypes().length];
-        for (int i = 0; i < method.getParameterTypes().length; i++) {
-            types[i] = method.getParameterTypes()[i].getName();
-        }
-        return types;
     }
 }
