@@ -18,4 +18,7 @@
     <!-- 引用服务 -->
     <rpc:refrence id="userService" name="com.kangyonggan.rpc.service.UserService"
                   interceptor="com.kangyonggan.rpc.interceptor.UserServiceInterceptor"/>
+
+    <!-- telnet服务治理 -->
+    <rpc:telnet port="9217"/>
 </beans>

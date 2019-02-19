@@ -1,6 +1,7 @@
 package com.kangyonggan.rpc.pojo;
 
 import com.kangyonggan.rpc.constants.RpcPojo;
+import com.kangyonggan.rpc.core.RpcContext;
 import com.kangyonggan.rpc.util.SpringUtils;
 import com.kangyonggan.rpc.util.ZookeeperClient;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.net.InetAddress;
 import java.util.Map;
 
 /**
@@ -41,6 +43,10 @@ public class Application implements ApplicationContextAware, InitializingBean {
     public void afterPropertiesSet() throws Exception {
         // 优雅停机
         addShutdownHook();
+
+        // 上下文环境
+        RpcContext.setApplicationName(name);
+        RpcContext.setLocalIp(InetAddress.getLocalHost().getHostAddress());
     }
 
     /**

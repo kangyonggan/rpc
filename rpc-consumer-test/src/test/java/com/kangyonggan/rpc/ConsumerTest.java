@@ -1,8 +1,5 @@
 package com.kangyonggan.rpc;
 
-import com.kangyonggan.rpc.core.GeneralService;
-import com.kangyonggan.rpc.service.UserService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -27,9 +24,6 @@ public class ConsumerTest {
      */
     @Test
     public void testRemoveCall() throws Throwable {
-        UserService userService = (UserService) context.getBean("userService");
-        boolean exists = userService.existsMobileNo("18516690317");
-        Assert.assertTrue(exists);
         System.in.read();
     }
 

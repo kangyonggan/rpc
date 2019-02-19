@@ -2,7 +2,9 @@ package com.kangyonggan.rpc.util;
 
 import com.kangyonggan.rpc.pojo.Refrence;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,5 +38,9 @@ public final class RefrenceUtil {
         }
 
         return refrence;
+    }
+
+    public static List<Refrence> getAll() {
+        return new ArrayList<>(refrenceMap.values());
     }
 }

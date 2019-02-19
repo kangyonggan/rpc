@@ -20,5 +20,6 @@ public class RpcNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser(RpcPojo.service.name(), new SimpleBeanDefinitionParser(Service.class));
         registerBeanDefinitionParser(RpcPojo.client.name(), new SimpleBeanDefinitionParser(Client.class));
         registerBeanDefinitionParser(RpcPojo.refrence.name(), new SimpleBeanDefinitionParser(Refrence.class));
+        registerBeanDefinitionParser(RpcPojo.telnet.name(), new SimpleBeanDefinitionParser(Telnet.class));
     }
 }

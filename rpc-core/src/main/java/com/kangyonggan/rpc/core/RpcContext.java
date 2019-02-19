@@ -13,6 +13,10 @@ import java.util.concurrent.FutureTask;
  */
 public class RpcContext {
 
+    private static String applicationName;
+
+    private static String localIp;
+
     /**
      * 线程uuid
      */
@@ -25,4 +29,19 @@ public class RpcContext {
     @Getter
     private static ThreadLocal<FutureTask<Object>> futureTask = new ThreadLocal<>();
 
+    public static String getApplicationName() {
+        return applicationName;
+    }
+
+    public static void setApplicationName(String applicationName) {
+        RpcContext.applicationName = applicationName;
+    }
+
+    public static String getLocalIp() {
+        return localIp;
+    }
+
+    public static void setLocalIp(String localIp) {
+        RpcContext.localIp = localIp;
+    }
 }

@@ -1,20 +1,20 @@
 package com.kangyonggan.rpc.handler;
 
 import com.kangyonggan.rpc.constants.FaultPolicy;
-import com.kangyonggan.rpc.constants.RpcPojo;
 import com.kangyonggan.rpc.core.RpcClient;
 import com.kangyonggan.rpc.core.RpcContext;
 import com.kangyonggan.rpc.core.RpcInterceptor;
 import com.kangyonggan.rpc.core.RpcRequest;
-import com.kangyonggan.rpc.pojo.Application;
 import com.kangyonggan.rpc.pojo.Refrence;
-import com.kangyonggan.rpc.util.*;
+import com.kangyonggan.rpc.util.AsynUtils;
+import com.kangyonggan.rpc.util.InterceptorUtil;
+import com.kangyonggan.rpc.util.ServiceDegradeUtil;
+import com.kangyonggan.rpc.util.TypeParseUtil;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.net.InetAddress;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
@@ -45,9 +45,8 @@ public class ServiceHandler implements InvocationHandler {
 
         // 通用参数
         request.setUuid(RpcContext.getUuid().get());
-        Application application = (Application) SpringUtils.getApplicationContext().getBean(RpcPojo.application.name());
-        request.setClientApplicationName(application.getName());
-        request.setClientIp(InetAddress.getLocalHost().getHostAddress());
+        request.setClientApplicationName(RpcContext.getApplicationName());
+        request.setClientIp(RpcContext.getLocalIp());
 
         // 必要参数
         request.setClassName(refrence.getName());

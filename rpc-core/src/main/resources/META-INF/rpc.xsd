@@ -135,4 +135,14 @@
             <xsd:attribute name="interceptor" type="xsd:string"/>
         </xsd:complexType>
     </xsd:element>
+
+    <!-- telnet服务治理 -->
+    <xsd:element name="telnet">
+        <xsd:complexType>
+            <!-- ID -->
+            <xsd:attribute name="id" type="xsd:string" fixed="telnet"/>
+            <!-- 监听端口 -->
+            <xsd:attribute name="port" type="xsd:string" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

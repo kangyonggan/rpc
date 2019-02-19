@@ -15,7 +15,10 @@ import java.util.Random;
  */
 public final class LoadBalance {
 
-    private static int serviceIndex;
+    /**
+     * 引用次数
+     */
+    private static long refCount;
 
     private LoadBalance() {
     }
@@ -32,6 +35,8 @@ public final class LoadBalance {
         if (services.isEmpty()) {
             throw new RuntimeException("没有可用的服务");
         }
+
+        refCount++;
 
         if (LoadBalancePolicy.POLL.getName().equals(loadBalance)) {
             // 轮询
@@ -53,14 +58,12 @@ public final class LoadBalance {
     }
 
     /**
-     * 获取下一个服务的下标
+     * 获取引用次数
      *
-     * @param services
      * @return
      */
-    private static int getNextServiceIndex(List<Service> services) {
-        serviceIndex = (serviceIndex + 1) % services.size();
-        return serviceIndex;
+    public static long getRefCount() {
+        return refCount;
     }
 
     /**
@@ -92,6 +95,7 @@ public final class LoadBalance {
      * @return
      */
     private static Service poll(List<Service> services) {
-        return services.get(getNextServiceIndex(services));
+        long index = refCount % services.size();
+        return services.get((int) index);
     }
 }

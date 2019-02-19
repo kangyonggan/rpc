@@ -34,6 +34,11 @@ public enum RpcPojo {
     /**
      * 引用
      */
-    refrence
+    refrence,
+
+    /**
+     * 服务治理
+     */
+    telnet
 
 }
