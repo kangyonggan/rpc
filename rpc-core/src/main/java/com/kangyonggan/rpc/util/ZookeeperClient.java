@@ -1,6 +1,8 @@
 package com.kangyonggan.rpc.util;
 
 import com.kangyonggan.rpc.core.RpcServer;
+import com.kangyonggan.rpc.pojo.Refrence;
+import com.kangyonggan.rpc.pojo.Service;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
@@ -48,6 +50,34 @@ public final class ZookeeperClient {
             instance = new ZookeeperClient(ip, port);
         }
         return instance;
+    }
+
+    /**
+     * 从注册中心注销服务
+     *
+     * @param service
+     */
+    public void unregisterService(Service service) {
+        String path = "/rpc/" + service.getName() + "/provider/" + service.getIp() + "_" + service.getPort();
+
+        if (exists(path)) {
+            zkClient.delete(path);
+            logger.info("服务已注销:" + path);
+        }
+    }
+
+    /**
+     * 从注册中心注销客户端引用
+     *
+     * @param refrence
+     */
+    public void unregisterRefrence(Refrence refrence) {
+        String path = "/rpc/" + refrence.getName() + "/consumer/" + refrence.getIp();
+
+        if (exists(path)) {
+            zkClient.delete(path);
+            logger.info("客户端引用已注销:" + path);
+        }
     }
 
     /**

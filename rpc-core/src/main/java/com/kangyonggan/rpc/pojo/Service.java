@@ -90,7 +90,7 @@ public class Service implements InitializingBean, ApplicationContextAware, Seria
         if (RegisterType.zookeeper.name().equals(register.getType())) {
             // zookeeper
             String basePath = "/rpc/" + this.getName() + "/provider";
-            String path = basePath + "/" + InetAddress.getLocalHost().getHostAddress() + "_" + server.getPort();
+            String path = basePath + "/" + ip + "_" + port;
 
             ZookeeperClient client = ZookeeperClient.getInstance(register.getIp(), register.getPort());
 

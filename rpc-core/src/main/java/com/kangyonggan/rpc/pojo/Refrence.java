@@ -14,7 +14,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
 import java.lang.reflect.Proxy;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +27,11 @@ import java.util.List;
  * @since 2019-02-15
  */
 @Data
-public class Refrence implements InitializingBean, ApplicationContextAware, FactoryBean {
+public class Refrence implements InitializingBean, ApplicationContextAware, FactoryBean, Serializable {
 
-    private Logger logger = Logger.getLogger(Refrence.class);
+    private transient Logger logger = Logger.getLogger(Refrence.class);
 
-    private ApplicationContext applicationContext;
+    private transient ApplicationContext applicationContext;
 
     private String id;
 
@@ -51,7 +53,9 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
 
     private String fault;
 
-    private List<Service> services;
+    private transient List<Service> services;
+
+    private String ip;
 
     /**
      * 获取spring上下文对象
@@ -91,8 +95,36 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
             return;
         }
 
+        // 发布客户端引用到注册中心
+        registerRefrence();
+
         // 获取引用
         getRefrences();
+    }
+
+    /**
+     * 发布客户端引用到注册中心
+     *
+     * @throws Exception
+     */
+    private void registerRefrence() throws Exception {
+        Register register = (Register) SpringUtils.getApplicationContext().getBean(RpcPojo.register.name());
+        ip = InetAddress.getLocalHost().getHostAddress();
+
+        if (RegisterType.zookeeper.name().equals(register.getType())) {
+            // zookeeper
+            String basePath = "/rpc/" + this.getName() + "/consumer";
+            String path = basePath + "/" + ip;
+
+            ZookeeperClient client = ZookeeperClient.getInstance(register.getIp(), register.getPort());
+
+            // 应用（路径）永久保存
+            client.createPath(basePath);
+
+            // 服务(数据)不永久保存，当与zookeeper断开连接20s左右自动删除
+            client.saveNode(path, this);
+            logger.info("客户端引用发布成功:[" + path + "]");
+        }
     }
 
     /**
@@ -159,6 +191,7 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
                 ", async=" + async +
                 ", fault=" + fault +
                 ", services=" + services +
+                ", ip=" + ip +
                 '}';
     }
 }
