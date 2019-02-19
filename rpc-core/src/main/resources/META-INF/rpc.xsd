@@ -131,6 +131,8 @@
                     </xsd:restriction>
                 </xsd:simpleType>
             </xsd:attribute>
+            <!-- 拦截器 -->
+            <xsd:attribute name="interceptor" type="xsd:string"/>
         </xsd:complexType>
     </xsd:element>
 </xsd:schema>

@@ -4,13 +4,16 @@ import com.kangyonggan.rpc.constants.FaultPolicy;
 import com.kangyonggan.rpc.constants.RpcPojo;
 import com.kangyonggan.rpc.core.RpcClient;
 import com.kangyonggan.rpc.core.RpcContext;
+import com.kangyonggan.rpc.core.RpcInterceptor;
 import com.kangyonggan.rpc.core.RpcRequest;
 import com.kangyonggan.rpc.pojo.Application;
 import com.kangyonggan.rpc.pojo.Refrence;
 import com.kangyonggan.rpc.util.AsynUtils;
+import com.kangyonggan.rpc.util.InterceptorUtil;
 import com.kangyonggan.rpc.util.SpringUtils;
 import com.kangyonggan.rpc.util.TypeParseUtil;
 import org.apache.log4j.Logger;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -100,6 +103,13 @@ public class ServiceHandler implements InvocationHandler {
             return new RpcClient(refrence).remoteCall(request);
         } catch (Throwable e) {
             logger.error(e);
+
+            RpcInterceptor interceptor = InterceptorUtil.get(refrence.getInterceptor());
+            // 拦截器
+            if (!StringUtils.isEmpty(refrence.getInterceptor())) {
+                interceptor.exceptionHandle(refrence, request, e);
+            }
+
             if (refrence.getFault().equals(FaultPolicy.FAIL_FAST.getName())) {
                 // 快速失败
                 logger.info("远程调用失败，使用快速失败策略");

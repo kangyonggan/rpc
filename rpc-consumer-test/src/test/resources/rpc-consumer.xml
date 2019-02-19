@@ -16,5 +16,6 @@
     <rpc:register type="zookeeper" ip="122.112.204.190" port="2181"/>
 
     <!-- 引用服务 -->
-    <rpc:refrence id="userService" name="com.kangyonggan.rpc.service.UserService"/>
+    <rpc:refrence id="userService" name="com.kangyonggan.rpc.service.UserService"
+                  interceptor="com.kangyonggan.rpc.interceptor.UserServiceInterceptor"/>
 </beans>

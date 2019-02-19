@@ -7,6 +7,7 @@ import com.kangyonggan.rpc.pojo.Client;
 import com.kangyonggan.rpc.pojo.Refrence;
 import com.kangyonggan.rpc.pojo.Service;
 import com.kangyonggan.rpc.util.CacheUtil;
+import com.kangyonggan.rpc.util.InterceptorUtil;
 import com.kangyonggan.rpc.util.LoadBalance;
 import com.kangyonggan.rpc.util.SpringUtils;
 import io.netty.bootstrap.Bootstrap;
@@ -104,11 +105,24 @@ public class RpcClient {
      * @throws Throwable
      */
     public Object remoteCall(RpcRequest request) throws Throwable {
+        RpcInterceptor interceptor = InterceptorUtil.get(refrence.getInterceptor());
+
+        // 拦截器
+        if (!StringUtils.isEmpty(refrence.getInterceptor())) {
+            interceptor.preHandle(refrence, request);
+        }
+
         // 判断是否使用缓存
         if (refrence.isUseCache()) {
             CacheUtil.CacheObject cacheObject = CacheUtil.getCache(request);
             if (cacheObject != null) {
                 logger.info("结果走缓存：" + cacheObject.getRpcResponse());
+
+                // 拦截器
+                if (!StringUtils.isEmpty(refrence.getInterceptor())) {
+                    interceptor.postHandle(refrence, request);
+                }
+
                 return cacheObject.getRpcResponse().getResult();
             }
         }
@@ -128,7 +142,17 @@ public class RpcClient {
                 logger.info("结果已缓存");
             }
 
+            // 拦截器
+            if (!StringUtils.isEmpty(refrence.getInterceptor())) {
+                interceptor.postHandle(refrence, request);
+            }
+
             return response.getResult();
+        }
+
+        // 拦截器
+        if (!StringUtils.isEmpty(refrence.getInterceptor())) {
+            interceptor.postHandle(refrence, request);
         }
 
         throw response.getThrowable();
