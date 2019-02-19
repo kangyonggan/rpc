@@ -2,7 +2,9 @@ package com.kangyonggan.rpc.pojo;
 
 import com.kangyonggan.rpc.constants.RegisterType;
 import com.kangyonggan.rpc.constants.RpcPojo;
+import com.kangyonggan.rpc.core.ServiceChangeListener;
 import com.kangyonggan.rpc.handler.ServiceHandler;
+import com.kangyonggan.rpc.util.RefrenceUtil;
 import com.kangyonggan.rpc.util.SpringUtils;
 import com.kangyonggan.rpc.util.ZookeeperClient;
 import lombok.Data;
@@ -97,11 +99,37 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
             return;
         }
 
+        init();
+    }
+
+    /**
+     * 初始化
+     *
+     * @throws Exception
+     */
+    public void init() throws Exception {
         // 发布客户端引用到注册中心
         registerRefrence();
 
         // 获取引用
         getRefrences();
+
+        // 保存引用
+        RefrenceUtil.put(this);
+
+        // 订阅服务变化
+        subscribeServiceChange();
+    }
+
+    /**
+     * 订阅服务变化
+     */
+    private void subscribeServiceChange() {
+        Register register = (Register) SpringUtils.getApplicationContext().getBean(RpcPojo.register.name());
+        String path = "/rpc/" + name + "/provider";
+        logger.info("订阅服务变化:[" + path + "]");
+        // 订阅子目录变化
+        ZookeeperClient.getInstance(register.getIp(), register.getPort()).subscribeChildChange(path, new ServiceChangeListener(name));
     }
 
     /**

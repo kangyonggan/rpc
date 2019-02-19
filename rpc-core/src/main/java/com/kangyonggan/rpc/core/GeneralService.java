@@ -3,6 +3,7 @@ package com.kangyonggan.rpc.core;
 import com.kangyonggan.rpc.constants.FaultPolicy;
 import com.kangyonggan.rpc.handler.ServiceHandler;
 import com.kangyonggan.rpc.pojo.Refrence;
+import com.kangyonggan.rpc.util.RefrenceUtil;
 
 /**
  * 泛化调用服务
@@ -23,8 +24,7 @@ public final class GeneralService {
      * @throws Throwable
      */
     public static Object invoke(String className, String methodName, Class[] argTypes, Object[] args) throws Throwable {
-        Refrence refrence = new Refrence();
-        refrence.setName(className);
+        Refrence refrence = RefrenceUtil.get(className);
         refrence.setFault(FaultPolicy.FAIL_FAST.getName());
         return invoke(refrence, methodName, argTypes, args, null);
     }
@@ -42,8 +42,7 @@ public final class GeneralService {
      * @throws Throwable
      */
     public static <E> E invoke(String className, String methodName, Class[] argTypes, Object[] args, Class<E> returnType) throws Throwable {
-        Refrence refrence = new Refrence();
-        refrence.setName(className);
+        Refrence refrence = RefrenceUtil.get(className);
         refrence.setFault(FaultPolicy.FAIL_FAST.getName());
         return (E) invoke(refrence, methodName, argTypes, args, returnType);
     }
@@ -60,7 +59,6 @@ public final class GeneralService {
      * @throws Throwable
      */
     public static Object invoke(Refrence refrence, String methodName, Class[] argTypes, Object[] args, Class<?> returnType) throws Throwable {
-        refrence.getRefrences();
         return new ServiceHandler(refrence).invoke(methodName, argTypes, args, returnType);
     }
 

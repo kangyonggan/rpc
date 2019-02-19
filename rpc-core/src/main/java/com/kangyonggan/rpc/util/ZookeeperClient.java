@@ -3,6 +3,7 @@ package com.kangyonggan.rpc.util;
 import com.kangyonggan.rpc.core.RpcServer;
 import com.kangyonggan.rpc.pojo.Refrence;
 import com.kangyonggan.rpc.pojo.Service;
+import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
@@ -153,5 +154,15 @@ public final class ZookeeperClient {
             return null;
         }
         return zkClient.readData(path, new Stat());
+    }
+
+    /**
+     * 订阅服务变化
+     *
+     * @param path
+     * @param listener
+     */
+    public void subscribeChildChange(String path, IZkChildListener listener) {
+        zkClient.subscribeChildChanges(path, listener);
     }
 }

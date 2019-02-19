@@ -29,6 +29,10 @@ public final class LoadBalance {
      * @throws Exception
      */
     public static Service getService(List<Service> services, String loadBalance) throws Exception {
+        if (services.isEmpty()) {
+            throw new RuntimeException("没有可用的服务");
+        }
+
         if (LoadBalancePolicy.POLL.getName().equals(loadBalance)) {
             // 轮询
             return poll(services);
@@ -55,9 +59,6 @@ public final class LoadBalance {
      * @return
      */
     private static int getNextServiceIndex(List<Service> services) {
-        if (services.isEmpty()) {
-            throw new RuntimeException("没有可用的服务");
-        }
         serviceIndex = (serviceIndex + 1) % services.size();
         return serviceIndex;
     }

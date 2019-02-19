@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class RpcServerHandler extends ChannelInboundHandlerAdapter {
 
-    Logger logger = Logger.getLogger(RpcServerHandler.class);
+    private Logger logger = Logger.getLogger(RpcServerHandler.class);
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
