@@ -8,10 +8,7 @@ import com.kangyonggan.rpc.core.RpcInterceptor;
 import com.kangyonggan.rpc.core.RpcRequest;
 import com.kangyonggan.rpc.pojo.Application;
 import com.kangyonggan.rpc.pojo.Refrence;
-import com.kangyonggan.rpc.util.AsynUtils;
-import com.kangyonggan.rpc.util.InterceptorUtil;
-import com.kangyonggan.rpc.util.SpringUtils;
-import com.kangyonggan.rpc.util.TypeParseUtil;
+import com.kangyonggan.rpc.util.*;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
@@ -99,6 +96,17 @@ public class ServiceHandler implements InvocationHandler {
      * @throws Throwable
      */
     private Object remoteCall(Refrence refrence, RpcRequest request, Class<?> returnType) throws Throwable {
+        // 判断是否服务降级
+        if (ServiceDegradeUtil.exists(refrence.getName())) {
+            logger.info("[降级服务]，直接返回null");
+
+            // 判断基础类型，返回默认值，否则自动转换会报空指针
+            if (TypeParseUtil.isBasicType(returnType)) {
+                return TypeParseUtil.getBasicTypeDefaultValue(returnType);
+            }
+            return null;
+        }
+
         try {
             return new RpcClient(refrence).remoteCall(request);
         } catch (Throwable e) {
