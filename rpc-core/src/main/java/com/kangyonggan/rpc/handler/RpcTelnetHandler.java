@@ -4,6 +4,7 @@ import com.kangyonggan.rpc.constants.TelnetCommand;
 import com.kangyonggan.rpc.core.RpcContext;
 import com.kangyonggan.rpc.pojo.Refrence;
 import com.kangyonggan.rpc.pojo.Service;
+import com.kangyonggan.rpc.util.LoadBalance;
 import com.kangyonggan.rpc.util.RefrenceUtil;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -62,20 +63,14 @@ public class RpcTelnetHandler extends SimpleChannelInboundHandler<String> {
                 String refrenceName = msg.substring(msg.indexOf(" ") + 1);
                 Refrence refrence = RefrenceUtil.get(refrenceName);
                 if (refrence == null) {
-                    response = refrenceName + "的引用服务列表:[]";
+                    response = refrenceName + "引用不存在";
                 } else {
                     List<Service> services = refrence.getServices();
                     response = refrenceName + "的引用服务列表:" + services.toString();
                 }
             } else if (msg.startsWith(TelnetCommand.COUNT)) {
                 String refrenceName = msg.substring(msg.indexOf(" ") + 1);
-                Refrence refrence = RefrenceUtil.get(refrenceName);
-                if (refrence == null) {
-                    response = refrenceName + "的引用服务列表:[]";
-                } else {
-                    List<Service> services = refrence.getServices();
-                    response = refrenceName + "的引用服务列表:" + services.toString();
-                }
+                response = refrenceName + "引用的调用次数:" + LoadBalance.getRefCount(refrenceName);
             } else {
                 response = WELCOME_MSG;
             }

@@ -88,7 +88,7 @@ public class RpcClient {
                 Client client = (Client) SpringUtils.getApplicationContext().getBean(RpcPojo.client.name());
                 logger.info("客户端负载均衡策略:" + client.getLoadBalance());
 
-                Service service = LoadBalance.getService(refrence.getServices(), client.getLoadBalance());
+                Service service = LoadBalance.getService(refrence, client.getLoadBalance());
                 channelFuture = bootstrap.connect(service.getIp(), service.getPort()).sync();
                 logger.info("连接远程服务端成功:" + service);
             }

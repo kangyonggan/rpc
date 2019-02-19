@@ -1,10 +1,13 @@
 package com.kangyonggan.rpc.util;
 
 import com.kangyonggan.rpc.constants.LoadBalancePolicy;
+import com.kangyonggan.rpc.pojo.Refrence;
 import com.kangyonggan.rpc.pojo.Service;
 
 import java.net.InetAddress;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -18,7 +21,7 @@ public final class LoadBalance {
     /**
      * 引用次数
      */
-    private static long refCount;
+    private static Map<String, Long> refCounts = new HashMap<>();
 
     private LoadBalance() {
     }
@@ -26,21 +29,24 @@ public final class LoadBalance {
     /**
      * 根据负载均衡策略获取服务
      *
-     * @param services
+     * @param refrence
      * @param loadBalance
      * @return
      * @throws Exception
      */
-    public static Service getService(List<Service> services, String loadBalance) throws Exception {
+    public static Service getService(Refrence refrence, String loadBalance) throws Exception {
+        List<Service> services = refrence.getServices();
         if (services.isEmpty()) {
             throw new RuntimeException("没有可用的服务");
         }
 
-        refCount++;
+        Long count = getRefCount(refrence.getName());
+        count++;
+        refCounts.put(refrence.getName(), count);
 
         if (LoadBalancePolicy.POLL.getName().equals(loadBalance)) {
             // 轮询
-            return poll(services);
+            return poll(count, services);
         } else if (LoadBalancePolicy.RANDOM.getName().equals(loadBalance)) {
             // 随机
             return random(services);
@@ -60,10 +66,11 @@ public final class LoadBalance {
     /**
      * 获取引用次数
      *
+     * @param refrenceName
      * @return
      */
-    public static long getRefCount() {
-        return refCount;
+    public static long getRefCount(String refrenceName) {
+        return refCounts.getOrDefault(refrenceName, 0L);
     }
 
     /**
@@ -91,10 +98,11 @@ public final class LoadBalance {
     /**
      * 轮询
      *
+     * @param refCount
      * @param services
      * @return
      */
-    private static Service poll(List<Service> services) {
+    private static Service poll(long refCount, List<Service> services) {
         long index = refCount % services.size();
         return services.get((int) index);
     }
