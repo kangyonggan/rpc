@@ -26,6 +26,15 @@ public final class ServiceDegradeUtil {
     }
 
     /**
+     * 获取降级服务列表
+     *
+     * @return
+     */
+    public static List<String> getDegradeList() {
+        return degradeServices;
+    }
+
+    /**
      * 判断服务是否降级
      *
      * @param refrenceName
@@ -63,5 +72,23 @@ public final class ServiceDegradeUtil {
         logger.info("订阅降级服务:[" + path + "]");
         // 订阅子目录变化
         ZookeeperClient.getInstance(register.getIp(), register.getPort()).subscribeChildChange(path, new DegradeServiceChangeListener());
+    }
+
+    /**
+     * 添加降级服务
+     *
+     * @param name
+     */
+    public static void add(String name) {
+        degradeServices.add(name);
+    }
+
+    /**
+     * 删除降级服务
+     *
+     * @param name
+     */
+    public static void del(String name) {
+        degradeServices.remove(name);
     }
 }

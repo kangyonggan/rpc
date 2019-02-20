@@ -85,6 +85,23 @@ public class CacheUtil {
     }
 
     /**
+     * 缓存大小
+     *
+     * @return
+     */
+    public static int size() {
+        return cacheKeyList.size();
+    }
+
+    /**
+     * 清空缓存
+     */
+    public static void clear() {
+        cacheMap = new HashMap<>();
+        cacheKeyList = new ArrayList<>();
+    }
+
+    /**
      * 缓存对象
      */
     @Data

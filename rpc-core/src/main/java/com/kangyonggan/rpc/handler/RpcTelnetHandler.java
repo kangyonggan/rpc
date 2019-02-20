@@ -4,7 +4,9 @@ import com.kangyonggan.rpc.constants.TelnetCommand;
 import com.kangyonggan.rpc.core.RpcContext;
 import com.kangyonggan.rpc.pojo.Refrence;
 import com.kangyonggan.rpc.pojo.Service;
+import com.kangyonggan.rpc.util.CacheUtil;
 import com.kangyonggan.rpc.util.RefrenceUtil;
+import com.kangyonggan.rpc.util.ServiceDegradeUtil;
 import com.kangyonggan.rpc.util.SpringUtils;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -28,6 +30,8 @@ public class RpcTelnetHandler extends SimpleChannelInboundHandler<String> {
      * 等待输入
      */
     private String wait4input;
+
+    private static String helpMsg = getHelpResponse();
 
     private int port;
 
@@ -74,7 +78,7 @@ public class RpcTelnetHandler extends SimpleChannelInboundHandler<String> {
                 return;
             } else if (TelnetCommand.HELP.equals(msg)) {
                 // 帮助
-                response = getHelpResponse();
+                response = helpMsg;
             } else if (TelnetCommand.CLIENT.equals(msg)) {
                 // 客户端信息
                 response = "应用名称：" + RpcContext.getApplicationName() + NEW_LINE;
@@ -116,6 +120,46 @@ public class RpcTelnetHandler extends SimpleChannelInboundHandler<String> {
                     Service service = SpringUtils.getApplicationContext().getBean(name, Service.class);
                     response = service.toString() + NEW_LINE;
                 }
+            } else if (msg.startsWith(TelnetCommand.CACHE)) {
+                // 缓存
+                String arg = msg.split("\\s")[1];
+                if ("-size".equals(arg)) {
+                    // 缓存大小
+                    response = CacheUtil.size() + NEW_LINE;
+                } else if ("-clear".equals(arg)) {
+                    // 清空缓存
+                    CacheUtil.clear();
+                    response = CacheUtil.size() + NEW_LINE;
+                } else {
+                    response = "Error argument '" + msg + "' with cache. See 'help'." + NEW_LINE;
+                }
+            } else if (TelnetCommand.DEGRADES.equals(msg)) {
+                // 降级服务列表
+                List<String> list = ServiceDegradeUtil.getDegradeList();
+                StringBuilder sb = new StringBuilder();
+                response = "Total " + list.size() + NEW_LINE;
+                for (int i = 0; i < list.size(); i++) {
+                    sb.append(i).append(") ").append(list.get(i)).append(NEW_LINE);
+                }
+                response += sb.toString();
+            } else if (msg.startsWith(TelnetCommand.DEGRADE)) {
+                String[] arr = msg.split("\\s");
+                String type = arr[1];
+                if ("-pull".equals(type)) {
+                    // 拉取降级服务
+                    ServiceDegradeUtil.getDegradeServices();
+                    response = "Total " + ServiceDegradeUtil.getDegradeList().size() + NEW_LINE;
+                } else if ("-add".equals(type)) {
+                    // 添加降级服务
+                    ServiceDegradeUtil.add(arr[2]);
+                    response = "Total " + ServiceDegradeUtil.getDegradeList().size() + NEW_LINE;
+                } else if ("-del".equals(type)) {
+                    // 删除降级服务
+                    ServiceDegradeUtil.del(arr[2]);
+                    response = "Total " + ServiceDegradeUtil.getDegradeList().size() + NEW_LINE;
+                } else {
+                    response = "Error argument '" + msg + "' with degrade. See 'help'." + NEW_LINE;
+                }
             } else {
                 response = "Unknown command '" + msg + "'. See 'help'." + NEW_LINE;
             }
@@ -131,14 +175,20 @@ public class RpcTelnetHandler extends SimpleChannelInboundHandler<String> {
         ctx.flush();
     }
 
-    private String getHelpResponse() {
+    private static String getHelpResponse() {
         String response = String.format("%4s%-40s%s", "1. ", "help", "帮助\r\n");
         response += String.format("%4s%-40s%s", "2. ", "exit", "退出\r\n");
         response += String.format("%4s%-40s%s", "3. ", "client", "客户端信息\r\n");
         response += String.format("%4s%-40s%s", "4. ", "refs", "引用列表\r\n");
-        response += String.format("%4s%-40s%s", "5. ", "ref [-name]", "引用详情\r\n");
+        response += String.format("%4s%-40s%s", "5. ", "ref [name]", "引用详情\r\n");
         response += String.format("%4s%-40s%s", "6. ", "services", "服务列表\r\n");
-        response += String.format("%4s%-40s%s", "7. ", "services [-name]", "服务详情\r\n");
+        response += String.format("%4s%-40s%s", "7. ", "service [name]", "服务详情\r\n");
+        response += String.format("%4s%-40s%s", "8. ", "cache -size", "缓存大小\r\n");
+        response += String.format("%4s%-40s%s", "9. ", "cache -clear", "清空缓存\r\n");
+        response += String.format("%4s%-40s%s", "10. ", "degrades", "降级服务列表\r\n");
+        response += String.format("%4s%-40s%s", "11. ", "degrade -pull", "拉取最新降级服务\r\n");
+        response += String.format("%4s%-40s%s", "12. ", "degrade -add [name]", "添加降级服务\r\n");
+        response += String.format("%4s%-40s%s", "13. ", "degrade -del [name]", "删除降级服务\r\n");
         return response;
     }
 }

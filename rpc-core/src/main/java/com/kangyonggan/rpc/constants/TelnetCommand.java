@@ -43,4 +43,19 @@ public interface TelnetCommand {
      */
     String SERVICE = "service";
 
+    /**
+     * 缓存
+     */
+    String CACHE = "cache";
+
+    /**
+     * 降级服务列表
+     */
+    String DEGRADES = "degrades";
+
+    /**
+     * 添加/删除降级服务
+     */
+    String DEGRADE = "degrade";
+
 }
