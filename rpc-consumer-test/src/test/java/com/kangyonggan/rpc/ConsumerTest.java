@@ -23,7 +23,7 @@ public class ConsumerTest {
      * @throws Exception
      */
     @Test
-    public void testRemoveCall() throws Throwable {
+    public void testRemoteCall() throws Throwable {
         System.in.read();
     }
 

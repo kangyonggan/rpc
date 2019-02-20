@@ -57,6 +57,8 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
 
     private String interceptor;
 
+    private long refCount;
+
     private transient List<Service> services;
 
     private String ip;
@@ -221,6 +223,7 @@ public class Refrence implements InitializingBean, ApplicationContextAware, Fact
                 ", async=" + async +
                 ", fault=" + fault +
                 ", interceptor=" + interceptor +
+                ", refCount=" + refCount +
                 ", services=" + services +
                 ", ip=" + ip +
                 '}';

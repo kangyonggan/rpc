@@ -5,9 +5,7 @@ import com.kangyonggan.rpc.pojo.Refrence;
 import com.kangyonggan.rpc.pojo.Service;
 
 import java.net.InetAddress;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -17,11 +15,6 @@ import java.util.Random;
  * @since 2019-02-18
  */
 public final class LoadBalance {
-
-    /**
-     * 引用次数
-     */
-    private static Map<String, Long> refCounts = new HashMap<>();
 
     private LoadBalance() {
     }
@@ -40,9 +33,9 @@ public final class LoadBalance {
             throw new RuntimeException("没有可用的服务");
         }
 
-        Long count = getRefCount(refrence.getName());
+        Long count = refrence.getRefCount();
         count++;
-        refCounts.put(refrence.getName(), count);
+        refrence.setRefCount(count);
 
         if (LoadBalancePolicy.POLL.getName().equals(loadBalance)) {
             // 轮询
@@ -61,16 +54,6 @@ public final class LoadBalance {
             throw new RuntimeException("暂不支持加权随机策略");
         }
         return null;
-    }
-
-    /**
-     * 获取引用次数
-     *
-     * @param refrenceName
-     * @return
-     */
-    public static long getRefCount(String refrenceName) {
-        return refCounts.getOrDefault(refrenceName, 0L);
     }
 
     /**

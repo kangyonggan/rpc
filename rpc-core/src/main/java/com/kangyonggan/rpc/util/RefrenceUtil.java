@@ -40,6 +40,10 @@ public final class RefrenceUtil {
         return refrence;
     }
 
+    public static boolean exists(String refrenceName) {
+        return refrenceMap.containsKey(refrenceName);
+    }
+
     public static List<Refrence> getAll() {
         return new ArrayList<>(refrenceMap.values());
     }

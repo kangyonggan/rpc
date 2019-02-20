@@ -14,28 +14,33 @@ public interface TelnetCommand {
     String EXIT = "exit";
 
     /**
-     * 查看Application名称
+     * 帮助
      */
-    String APP = "app";
+    String HELP = "help";
 
     /**
-     * 查看本地IP
+     * 客户端
      */
-    String IP = "ip";
+    String CLIENT = "client";
 
     /**
-     * 查看引用列表
+     * 引用列表
      */
-    String REFRENCES = "refrences";
+    String REFS = "refs";
 
     /**
-     * 查看服务列表
+     * 引用详情
      */
-    String SERVICES = "services ";
+    String REF = "ref";
 
     /**
-     * 查看引用调用次数
+     * 服务列表
      */
-    String COUNT = "count ";
+    String SERVICES = "services";
+
+    /**
+     * 服务详情
+     */
+    String SERVICE = "service";
 
 }
