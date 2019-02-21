@@ -102,7 +102,7 @@ git clone https://github.com/kangyonggan/rpc.git
 ### 第二步
 切换分支
 ```
-git checkout 02-start-server
+git checkout 01-xsd
 ```
 
 ### 第三步
