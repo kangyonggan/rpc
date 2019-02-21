@@ -44,13 +44,14 @@ public class RpcClient {
 
     public RpcClient(Refrence refrence) {
         this.refrence = refrence;
-        connectRemoteService();
     }
 
     /**
      * 连接远程服务
+     *
+     * @return
      */
-    private void connectRemoteService() {
+    public Service connectRemoteService() {
         logger.info("正在连接远程服务端:" + refrence);
         // 客户端线程
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -91,10 +92,13 @@ public class RpcClient {
                 Service service = LoadBalance.getService(refrence, client.getLoadBalance());
                 channelFuture = bootstrap.connect(service.getIp(), service.getPort()).sync();
                 logger.info("连接远程服务端成功:" + service);
+                return service;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        return null;
     }
 
     /**
@@ -104,11 +108,12 @@ public class RpcClient {
      * @return
      * @throws Throwable
      */
-    public Object remoteCall(RpcRequest request) throws Throwable {
-        RpcInterceptor interceptor = InterceptorUtil.get(refrence.getInterceptor());
-
-        // 拦截器
+    public RpcResponse remoteCall(RpcRequest request) throws Throwable {
+        RpcInterceptor interceptor = null;
         if (!StringUtils.isEmpty(refrence.getInterceptor())) {
+            interceptor = InterceptorUtil.get(refrence.getInterceptor());
+
+            // 拦截器
             interceptor.preHandle(refrence, request);
         }
 
@@ -123,7 +128,7 @@ public class RpcClient {
                     interceptor.postHandle(refrence, request);
                 }
 
-                return cacheObject.getRpcResponse().getResult();
+                return cacheObject.getRpcResponse();
             }
         }
 
@@ -147,7 +152,7 @@ public class RpcClient {
                 interceptor.postHandle(refrence, request);
             }
 
-            return response.getResult();
+            return response;
         }
 
         // 拦截器

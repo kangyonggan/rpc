@@ -145,4 +145,16 @@
             <xsd:attribute name="port" type="xsd:string" use="required"/>
         </xsd:complexType>
     </xsd:element>
+
+    <!-- 监控 -->
+    <xsd:element name="monitor">
+        <xsd:complexType>
+            <!-- ID -->
+            <xsd:attribute name="id" type="xsd:string" fixed="monitor"/>
+            <!-- 监控ip -->
+            <xsd:attribute name="ip" type="xsd:string" use="required"/>
+            <!-- 监控端口 -->
+            <xsd:attribute name="port" type="xsd:integer" use="required"/>
+        </xsd:complexType>
+    </xsd:element>
 </xsd:schema>

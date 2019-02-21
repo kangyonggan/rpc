@@ -16,13 +16,8 @@
     <rpc:register type="zookeeper" ip="122.112.204.190" port="2181"/>
 
     <!-- 引用服务 -->
-    <rpc:refrence id="userService" name="com.kangyonggan.rpc.service.UserService"
-                  interceptor="com.kangyonggan.rpc.interceptor.UserServiceInterceptor"/>
+    <rpc:refrence id="userService" name="com.kangyonggan.rpc.service.UserService"/>
 
-    <!-- telnet服务治理 -->
-    <rpc:telnet port="9217"/>
-
-    <!-- User服务 -->
-    <rpc:service id="userService222" name="com.kangyonggan.rpc.service.UserService" ref="userServiceImpl"/>
-    <bean id="userServiceImpl" class="com.kangyonggan.rpc.service.impl.UserServiceImpl" />
+    <!--监控-->
+    <rpc:monitor ip="122.112.204.190" port="80"/>
 </beans>

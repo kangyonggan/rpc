@@ -1,20 +1,17 @@
 package com.kangyonggan.rpc.handler;
 
 import com.kangyonggan.rpc.constants.FaultPolicy;
-import com.kangyonggan.rpc.core.RpcClient;
-import com.kangyonggan.rpc.core.RpcContext;
-import com.kangyonggan.rpc.core.RpcInterceptor;
-import com.kangyonggan.rpc.core.RpcRequest;
+import com.kangyonggan.rpc.constants.RpcPojo;
+import com.kangyonggan.rpc.core.*;
 import com.kangyonggan.rpc.pojo.Refrence;
-import com.kangyonggan.rpc.util.AsynUtils;
-import com.kangyonggan.rpc.util.InterceptorUtil;
-import com.kangyonggan.rpc.util.ServiceDegradeUtil;
-import com.kangyonggan.rpc.util.TypeParseUtil;
+import com.kangyonggan.rpc.pojo.Service;
+import com.kangyonggan.rpc.util.*;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.Date;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
@@ -106,14 +103,21 @@ public class ServiceHandler implements InvocationHandler {
             return null;
         }
 
+        RpcResponse response = null;
+        Date beginTime = new Date();
+
         try {
-            return new RpcClient(refrence).remoteCall(request);
+            RpcClient rpcClient = new RpcClient(refrence);
+            Service service = rpcClient.connectRemoteService();
+            request.setService(service);
+            response = rpcClient.remoteCall(request);
+            return response.getResult();
         } catch (Throwable e) {
             logger.error(e);
 
-            RpcInterceptor interceptor = InterceptorUtil.get(refrence.getInterceptor());
-            // 拦截器
             if (!StringUtils.isEmpty(refrence.getInterceptor())) {
+                RpcInterceptor interceptor = InterceptorUtil.get(refrence.getInterceptor());
+                // 拦截器
                 interceptor.exceptionHandle(refrence, request, e);
             }
 
@@ -138,6 +142,27 @@ public class ServiceHandler implements InvocationHandler {
 
             logger.error("远程调用失败，暂不支持此容错策略");
             throw e;
+        } finally {
+            Date endTime = new Date();
+            // 监控
+            if (SpringUtils.getApplicationContext().containsBean(RpcPojo.monitor.name())) {
+                // 收集数据
+                MonitorObject monitorObject = new MonitorObject();
+                monitorObject.setRefrence(refrence);
+                monitorObject.setRpcRequest(request);
+                monitorObject.setRpcResponse(response);
+                monitorObject.setBeginTime(beginTime);
+                monitorObject.setEndTime(endTime);
+
+                // 异步发送到监控服务端
+                AsynUtils.submitTask(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        MonitorClient.getInstance().send(monitorObject);
+                        return null;
+                    }
+                });
+            }
         }
     }
 

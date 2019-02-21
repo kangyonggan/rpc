@@ -39,6 +39,11 @@ public enum RpcPojo {
     /**
      * 服务治理
      */
-    telnet
+    telnet,
+
+    /**
+     * 监控
+     */
+    monitor
 
 }

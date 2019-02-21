@@ -1,5 +1,6 @@
 package com.kangyonggan.rpc.core;
 
+import com.kangyonggan.rpc.pojo.Service;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -47,5 +48,10 @@ public class RpcRequest implements Serializable {
      * 客户端ip
      */
     private String clientIp;
+
+    /**
+     * 服务
+     */
+    private Service service;
 
 }
